@@ -1,0 +1,38 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Environment variables
+.env
+
+# Logs
+logs/*.log
+logs/*.zip
+
+# Uploaded files
+static/uploads/*
+!static/uploads/.gitkeep
+
+# Hugging Face model cache
+.hf_cache/
+
+# Alembic
+# (keep versions/, ignore nothing specific here yet)
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Test artifacts
+.coverage
+htmlcov/
+.pytest_cache/

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post Job · ATS Screen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="post-job" data-page-title="Post Job">
+
+<div class="app-shell">
+  <div id="sidebar-root"></div>
+
+  <div class="app-main">
+    <div id="navbar-root"></div>
+
+    <main class="app-content">
+      <div class="page-header">
+        <h1>Post a job description</h1>
+        <p>Define the role once — every uploaded resume gets scored against it automatically.</p>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-8">
+          <div class="section-card">
+            <div class="section-card__body">
+              <div class="auth-alert" id="jobFormAlert" role="alert"></div>
+
+              <form id="postJobForm" novalidate>
+                <div class="mb-3">
+                  <label for="jobTitle" class="form-label-c">Job title</label>
+                  <input type="text" class="form-control-c" id="jobTitle" placeholder="e.g. Senior Backend Engineer" required>
+                </div>
+
+                <div class="row g-3 mb-3">
+                  <div class="col-md-6">
+                    <label for="jobDepartment" class="form-label-c">Department</label>
+                    <input type="text" class="form-control-c" id="jobDepartment" placeholder="e.g. Engineering">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="jobMinExperience" class="form-label-c">Minimum experience (years)</label>
+                    <input type="number" min="0" step="0.5" class="form-control-c" id="jobMinExperience" placeholder="e.g. 3">
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="jobEducation" class="form-label-c">Required education <span class="text-muted-c">(optional)</span></label>
+                  <input type="text" class="form-control-c" id="jobEducation" placeholder="e.g. B.Tech in Computer Science">
+                </div>
+
+                <div class="mb-3">
+                  <label for="jobDescription" class="form-label-c">Job description</label>
+                  <textarea class="form-control-c" id="jobDescription" rows="7" placeholder="Describe responsibilities, requirements, and what success looks like in this role..." required></textarea>
+                </div>
+
+                <div class="mb-1">
+                  <label for="skillInput" class="form-label-c">Required skills</label>
+                  <div class="tag-input" id="tagInputWrapper">
+                    <span id="tagChips"></span>
+                    <input type="text" id="skillInput" placeholder="Type a skill and press Enter">
+                  </div>
+                  <p class="form-hint">Press Enter or comma to add a skill, e.g. Python, Docker, REST APIs.</p>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                  <a href="dashboard.html" class="btn-outline-brand">Cancel</a>
+                  <button type="submit" class="btn-brand" id="postJobSubmitBtn"><i class="bi bi-send me-1"></i> Publish job</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="section-card">
+            <div class="section-card__header">
+              <h2>Why skills matter</h2>
+            </div>
+            <div class="section-card__body">
+              <p class="text-secondary-c" style="font-size:0.85rem;">
+                Skills you list here become the basis for each candidate's match score — the AI engine compares
+                required skills against what it finds in each resume, and shows exactly which ones matched and which
+                are missing on the Results page.
+              </p>
+              <div class="d-flex align-items-start gap-2 mt-3">
+                <i class="bi bi-info-circle text-secondary-c mt-1"></i>
+                <p class="text-secondary-c mb-0" style="font-size:0.8rem;">Be specific — "React" and "Frontend development" produce different match signals.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/components.js"></script>
+<script src="js/post-job.js"></script>
+</body>
+</html>
