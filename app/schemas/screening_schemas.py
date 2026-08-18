@@ -1,7 +1,4 @@
-"""
-app/schemas/screening_schemas.py
-"""
-
+"""app/schemas/screening_schemas.py"""
 from datetime import datetime
 from typing import List
 from pydantic import BaseModel, ConfigDict, Field
@@ -21,7 +18,6 @@ class RecommendationResponse(BaseModel):
     recommendation_type: str
     message: str
     priority: str
-
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -36,10 +32,6 @@ class ATSScoreResponse(BaseModel):
     status: str
     screened_at: datetime
 
-    # Not real columns on ATSScore — computed at read time from the
-    # resume's and job's current skill relationships (see
-    # screening_service.build_ats_score_response) and merged in manually,
-    # since Pydantic's from_attributes can't derive them automatically.
     matched_skills: List[str] = []
     missing_skills: List[str] = []
     extra_skills: List[str] = []

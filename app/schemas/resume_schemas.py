@@ -1,7 +1,4 @@
-"""
-app/schemas/resume_schemas.py
-"""
-
+"""app/schemas/resume_schemas.py"""
 import json
 from datetime import datetime
 from typing import Optional, List
@@ -29,10 +26,6 @@ class ResumeResponse(BaseModel):
     @field_validator("parsed_certifications", "parsed_projects", mode="before")
     @classmethod
     def _parse_json_list(cls, value):
-        """The model stores these as JSON-serialized text; deserialize to a
-        real list for the API response. Falls back to an empty list for
-        None or malformed data rather than raising, since a resume with
-        no certifications/projects is a normal case, not an error."""
         if value is None:
             return []
         if isinstance(value, str):
@@ -44,10 +37,6 @@ class ResumeResponse(BaseModel):
 
 
 class ResumeTextPreview(BaseModel):
-    """Separate, smaller schema for when the raw text itself is needed
-    (e.g. a future 'view extracted text' feature) without bloating the
-    default resume list/detail responses above."""
     id: int
     raw_text: Optional[str] = None
-
     model_config = ConfigDict(from_attributes=True)

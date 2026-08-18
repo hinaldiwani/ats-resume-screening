@@ -5,10 +5,10 @@ Password hashing and JWT creation/validation utilities.
 No routes, no DB queries here — pure security primitives used by auth.py.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
-from jose import jwt, JWTError
+from jose import jwt, JWTError, ExpiredSignatureError
 from passlib.context import CryptContext
 
 from app.core.config import get_settings
@@ -33,8 +33,9 @@ def create_access_token(subject: str, expires_minutes: Optional[int] = None) -> 
     Creates a short-lived JWT access token. `subject` is the recruiter's id
     (stored as the `sub` claim) so downstream code can look up who the
     token belongs to.
+    Uses timezone-aware UTC datetime for expiry timestamp.
     """
-    expire = datetime.utcnow() + timedelta(
+    expire = datetime.now(timezone.utc) + timedelta(
         minutes=expires_minutes or settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
     payload = {"sub": str(subject), "type": "access", "exp": expire}
@@ -42,8 +43,11 @@ def create_access_token(subject: str, expires_minutes: Optional[int] = None) -> 
 
 
 def create_refresh_token(subject: str) -> str:
-    """Creates a longer-lived JWT refresh token, used only to mint new access tokens."""
-    expire = datetime.utcnow() + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
+    """
+    Creates a longer-lived JWT refresh token, used only to mint new access tokens.
+    Uses timezone-aware UTC datetime for expiry timestamp.
+    """
+    expire = datetime.now(timezone.utc) + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
     payload = {"sub": str(subject), "type": "refresh", "exp": expire}
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
@@ -64,4 +68,6 @@ __all__ = [
     "create_refresh_token",
     "decode_token",
     "JWTError",
+    "ExpiredSignatureError",
 ]
+

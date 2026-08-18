@@ -59,7 +59,17 @@ class Settings(BaseSettings):
     LOG_FILE: str = "app.log"
 
     # ---- CORS ----
-    CORS_ORIGINS: str = "http://localhost:8000"
+    CORS_ORIGINS: str = (
+        "http://localhost:8000,http://127.0.0.1:8000,"
+        "http://localhost:5500,http://127.0.0.1:5500,"
+        "http://localhost:3000,http://127.0.0.1:3000"
+    )
+
+    # ---- Rate Limiting ----
+    RATE_LIMIT_ENABLED: bool = True
+    RATE_LIMIT_AUTH_PER_MINUTE: int = 15
+    RATE_LIMIT_DEFAULT_PER_MINUTE: int = 120
+    RATE_LIMIT_SENSITIVE_PER_MINUTE: int = 30
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -70,11 +80,12 @@ class Settings(BaseSettings):
 
     @property
     def allowed_resume_extensions_list(self) -> List[str]:
-        return [ext.strip() for ext in self.ALLOWED_RESUME_EXTENSIONS.split(",")]
+        return [ext.strip() for ext in self.ALLOWED_RESUME_EXTENSIONS.split(",") if ext.strip()]
 
     @property
     def cors_origins_list(self) -> List[str]:
-        return [origin.strip() for origin in self.CORS_ORIGINS.split(",")]
+        return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+
 
 
 @lru_cache

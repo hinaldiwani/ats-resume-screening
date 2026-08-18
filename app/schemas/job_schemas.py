@@ -1,7 +1,4 @@
-"""
-app/schemas/job_schemas.py
-"""
-
+"""app/schemas/job_schemas.py"""
 from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel, Field, ConfigDict
@@ -33,5 +30,4 @@ class JobDescriptionResponse(BaseModel):
     status: str
     skills: List[SkillResponse] = []
     created_at: datetime
-
     model_config = ConfigDict(from_attributes=True)

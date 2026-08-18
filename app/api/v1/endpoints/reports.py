@@ -28,6 +28,7 @@ def _safe_filename(title: str) -> str:
 
 
 @router.get("/job/{job_id}/pdf")
+@router.get("/jobs/{job_id}/pdf")
 def download_pdf_report(
     job_id: int,
     db: Session = Depends(get_db),
@@ -45,7 +46,9 @@ def download_pdf_report(
 
 
 @router.get("/job/{job_id}/excel")
+@router.get("/jobs/{job_id}/excel")
 def download_excel_report(
+
     job_id: int,
     db: Session = Depends(get_db),
     current_recruiter: Recruiter = Depends(get_current_recruiter),

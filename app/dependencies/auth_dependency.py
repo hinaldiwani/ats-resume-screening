@@ -50,13 +50,15 @@ def get_current_recruiter(
         recruiter_id: str = payload.get("sub")
         if recruiter_id is None:
             raise credentials_exception
-    except JWTError:
+        recruiter_id_int = int(recruiter_id)
+    except (JWTError, ValueError, TypeError):
         raise credentials_exception
 
-    recruiter = db.query(Recruiter).filter(Recruiter.id == int(recruiter_id)).first()
+    recruiter = db.query(Recruiter).filter(Recruiter.id == recruiter_id_int).first()
     if recruiter is None:
         raise credentials_exception
     if not recruiter.is_active:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Account is inactive")
 
     return recruiter
+

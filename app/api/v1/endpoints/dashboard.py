@@ -34,7 +34,9 @@ def get_stats(
 
 
 @router.get("/top-candidates/all", response_model=APIResponse)
+@router.get("/top-candidates", response_model=APIResponse)
 def get_top_candidates(
+
     limit: int = Query(5, ge=1, le=50),
     db: Session = Depends(get_db),
     current_recruiter: Recruiter = Depends(get_current_recruiter),

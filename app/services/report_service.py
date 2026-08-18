@@ -10,7 +10,7 @@ second, potentially-drifting data path.
 
 import io
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List
 
 from reportlab.lib import colors
@@ -37,7 +37,7 @@ def generate_pdf_report(job: JobDescription, ats_scores: List[ATSScore]) -> byte
 
     elements.append(Paragraph(f"ATS Screening Report: {job.title}", styles["Title"]))
     elements.append(Paragraph(
-        f"Generated {datetime.utcnow().strftime('%B %d, %Y')} &middot; {len(ats_scores)} candidate(s) screened",
+        f"Generated {datetime.now(timezone.utc).strftime('%B %d, %Y')} &middot; {len(ats_scores)} candidate(s) screened",
         styles["Normal"],
     ))
     elements.append(Spacer(1, 0.2 * inch))
@@ -90,7 +90,8 @@ def generate_excel_report(job: JobDescription, ats_scores: List[ATSScore]) -> by
 
     ws["A1"] = f"ATS Screening Report: {job.title}"
     ws["A1"].font = Font(size=14, bold=True)
-    ws["A2"] = f"Generated {datetime.utcnow().strftime('%B %d, %Y')} \u2014 {len(ats_scores)} candidate(s) screened"
+    ws["A2"] = f"Generated {datetime.now(timezone.utc).strftime('%B %d, %Y')} \u2014 {len(ats_scores)} candidate(s) screened"
+
     ws["A2"].font = Font(italic=True, color="666666")
 
     headers = [

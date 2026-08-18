@@ -1,7 +1,4 @@
-"""
-app/schemas/candidate_schemas.py
-"""
-
+"""app/schemas/candidate_schemas.py"""
 from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
@@ -21,5 +18,4 @@ class CandidateResponse(BaseModel):
     phone: Optional[str] = None
     location: Optional[str] = None
     created_at: datetime
-
     model_config = ConfigDict(from_attributes=True)

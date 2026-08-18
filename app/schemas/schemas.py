@@ -1,20 +1,12 @@
 """
 app/schemas/schemas.py
-
-Pydantic schemas for the authentication module. These define the API
-contract — what the client must send and what it receives back — and are
-kept separate from the SQLAlchemy models in app/models/models.py.
+Auth schemas plus the shared APIResponse envelope.
 """
-
 from datetime import datetime
 from typing import Optional, Any
-
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
 
 
-# ---------------------------------------------------------------------------
-# Register
-# ---------------------------------------------------------------------------
 class RecruiterRegisterRequest(BaseModel):
     name: str = Field(..., min_length=2, max_length=150)
     email: EmailStr
@@ -29,13 +21,9 @@ class RecruiterResponse(BaseModel):
     company_name: Optional[str] = None
     is_active: bool
     created_at: datetime
-
     model_config = ConfigDict(from_attributes=True)
 
 
-# ---------------------------------------------------------------------------
-# Login
-# ---------------------------------------------------------------------------
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
@@ -47,24 +35,14 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
 
 
-# ---------------------------------------------------------------------------
-# Refresh
-# ---------------------------------------------------------------------------
 class RefreshRequest(BaseModel):
     refresh_token: str
 
 
-# ---------------------------------------------------------------------------
-# Logout
-# ---------------------------------------------------------------------------
 class LogoutRequest(BaseModel):
     access_token: str
 
 
-# ---------------------------------------------------------------------------
-# Standard response envelope (matches the convention set in main.py's
-# exception handlers, so every response — success or error — has the same shape)
-# ---------------------------------------------------------------------------
 class APIResponse(BaseModel):
     success: bool
     data: Optional[Any] = None

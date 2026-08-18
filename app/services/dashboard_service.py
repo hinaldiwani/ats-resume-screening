@@ -21,7 +21,7 @@ rather than fabricating a number.
 """
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List
 
 from sqlalchemy import func
@@ -31,7 +31,7 @@ from app.models.models import JobDescription, ATSScore, Resume
 
 logger = logging.getLogger(__name__)
 
-WEEK_AGO = lambda: datetime.utcnow() - timedelta(days=7)  # noqa: E731
+WEEK_AGO = lambda: datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(days=7)  # noqa: E731
 
 
 def _recruiter_job_ids(db: Session, recruiter_id: int) -> List[int]:

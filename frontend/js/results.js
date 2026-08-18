@@ -92,6 +92,7 @@ function renderResults() {
         <td>${statusBadge(r.status)}</td>
         <td class="text-end">
           <div class="d-flex gap-2 justify-content-end">
+            <a href="candidate-result.html?id=${r.id}" class="btn-ghost-sm" title="View details"><i class="bi bi-eye"></i></a>
             <button class="btn-ghost-sm" onclick="updateStatus(${r.id}, 'shortlisted')" title="Shortlist"><i class="bi bi-check2"></i></button>
             <button class="btn-ghost-sm" onclick="updateStatus(${r.id}, 'rejected')" title="Reject"><i class="bi bi-x"></i></button>
           </div>

@@ -1,0 +1,56 @@
+# docker/docker-compose.yml
+#
+# Brings up a real MySQL 8 service plus the FastAPI app configured to use
+# it. Run from the project root:
+#
+#   cd docker && docker compose up --build
+#
+# The app waits for MySQL to report healthy before starting (see
+# depends_on/condition below), so there's no race on first boot.
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ats_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword_change_me}
+      MYSQL_DATABASE: ${DB_NAME:-ats_resume_db}
+      MYSQL_USER: ${DB_USER:-ats_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-change_this_password}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-rootpassword_change_me}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: ats_app
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    environment:
+      # Overrides whatever DB_HOST is set to in .env (typically "localhost"
+      # for non-Docker local dev) — inside this compose network, the MySQL
+      # service is reachable at the hostname "mysql", not localhost.
+      DB_HOST: mysql
+      DATABASE_URL: mysql+pymysql://${DB_USER:-ats_user}:${DB_PASSWORD:-change_this_password}@mysql:3306/${DB_NAME:-ats_resume_db}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../static/uploads:/app/static/uploads
+      - ../logs:/app/logs
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+volumes:
+  mysql_data:

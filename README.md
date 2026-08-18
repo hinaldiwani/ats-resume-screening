@@ -48,7 +48,35 @@ Then edit `.env` and set at minimum:
 CREATE DATABASE ats_resume_db CHARACTER SET utf8mb4;
 ```
 
-(Table creation/migrations come in a later step via Alembic — no models exist yet.)
+### Option A — run MySQL via Docker (recommended)
+
+```bash
+cd docker
+docker compose up --build
+```
+
+This brings up a real MySQL 8 container and the FastAPI app together —
+the app waits for MySQL to report healthy before starting. The app will
+be available at `http://localhost:8000`.
+
+### Option B — run against a local MySQL install
+
+If you're running MySQL yourself (not via Docker), create the database
+and a dedicated user:
+
+```sql
+CREATE DATABASE ats_resume_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'ats_user'@'localhost' IDENTIFIED BY 'change_this_password';
+GRANT ALL PRIVILEGES ON ats_resume_db.* TO 'ats_user'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+Then apply the schema via Alembic rather than `Base.metadata.create_all`
+(migrations are the source of truth for schema changes from here on):
+
+```bash
+alembic upgrade head
+```
 
 ## 6. Run the application
 
@@ -58,8 +86,44 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 Then visit:
 - `http://localhost:8000/health` — health check endpoint
-- `http://localhost:8000/docs` — auto-generated Swagger UI (all endpoint
-  routers are mounted but currently empty)
+- `http://localhost:8000/docs` — Swagger UI
+
+## 7. Run the test suite
+
+```bash
+pip install -r requirements.txt  # includes pytest, pytest-cov, httpx
+pytest
+```
+
+The suite uses an in-memory SQLite database per test (fast, no external
+dependencies) with `sentence_transformers` stubbed out — see
+`tests/conftest.py` for why. This means the suite does **not** by itself
+catch MySQL-specific issues (collation quirks, foreign-key/InnoDB
+behavior). Those are covered separately: every model and migration in
+this project has been manually verified against a real MySQL 8 instance,
+including a full `alembic upgrade → downgrade → upgrade` cycle and a
+cascade-delete test. If you change the schema, re-verify against real
+MySQL before trusting the change, not just the SQLite-backed test suite.
+
+## 8. Database migrations (Alembic)
+
+The initial schema migration lives in `alembic/versions/`. After
+changing any model in `app/models/models.py`, generate a new migration:
+
+```bash
+alembic revision --autogenerate -m "Describe your change"
+```
+
+**Always review the generated file before applying it** — Alembic's
+autogenerate is a starting point, not guaranteed-correct output. In
+particular, watch for `downgrade()` functions that call `op.drop_index()`
+on a foreign-key-backing column before `op.drop_table()`: MySQL/InnoDB
+refuses to drop such an index independently of its constraint
+(`Cannot drop index '...': needed in a foreign key constraint`). The fix
+is to remove those explicit index drops — `op.drop_table()` already
+removes a table's indexes and FK constraints together. This exact issue
+was hit and fixed in the initial migration; it will recur on any new
+foreign-key column unless watched for.
 
 ## 7. Project structure
 

@@ -83,14 +83,18 @@ def refresh_access_token(db: Session, refresh_token: str) -> dict:
         if payload.get("type") != "refresh":
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token.")
         recruiter_id = payload.get("sub")
-    except JWTError:
+        if recruiter_id is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token.")
+        recruiter_id_int = int(recruiter_id)
+    except (JWTError, ValueError, TypeError):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired refresh token.")
 
-    recruiter = db.query(Recruiter).filter(Recruiter.id == int(recruiter_id)).first()
+    recruiter = db.query(Recruiter).filter(Recruiter.id == recruiter_id_int).first()
     if not recruiter or not recruiter.is_active:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Recruiter not found or inactive.")
 
     return {"access_token": create_access_token(subject=recruiter.id), "token_type": "bearer"}
+
 
 
 def logout_recruiter(db: Session, access_token: str) -> None:
