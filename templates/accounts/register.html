@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - ATS Resume Screening System{% endblock %}
+{% block page_title %}Create Account{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-4">
+  <div class="col-md-6 col-lg-5">
+    <div class="card card-custom border-0 shadow-lg">
+      <div class="card-body p-4 p-md-5">
+        <div class="text-center mb-4">
+          <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px;">
+            <i class="bi bi-person-plus-fill fs-3"></i>
+          </div>
+          <h4 class="fw-bold text-dark mb-1">Create Recruiter Account</h4>
+          <p class="text-muted small">Register to start screening resumes with AI</p>
+        </div>
+
+        <form method="post" action="{% url 'accounts:register' %}">
+          {% csrf_token %}
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label small fw-semibold">First Name *</label>
+              {{ form.first_name }}
+            </div>
+            <div class="col-6">
+              <label class="form-label small fw-semibold">Last Name</label>
+              {{ form.last_name }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Username *</label>
+            {{ form.username }}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Work Email *</label>
+            {{ form.email }}
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label small fw-semibold">Role *</label>
+              {{ form.role }}
+            </div>
+            <div class="col-6">
+              <label class="form-label small fw-semibold">Department</label>
+              {{ form.department }}
+            </div>
+          </div>
+venv\Scripts\activatevenv\Scripts\activate
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Password *</label>
+            {{ form.password1 }}
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label small fw-semibold">Confirm Password *</label>
+            {{ form.password2 }}
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm mb-3">
+            <i class="bi bi-check-circle me-2"></i>Complete Registration
+          </button>
+        </form>
+
+        <div class="border-top pt-3 text-center">
+          <p class="text-muted small mb-0">Already registered? <a href="{% url 'accounts:login' %}" class="text-primary fw-semibold">Sign in here</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

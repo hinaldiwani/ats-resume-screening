@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATS Resume Screening System | Recruiter Portal</title>
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <meta name="description" content="AI-powered ATS resume screening and candidate ranking platform for modern recruiters.">
+  <meta name="theme-color" content="#0D0E12">
+  <link rel="stylesheet" href="/static/css/styles.css?v=8.0">
+</head>
+
+<body>
+
+  <!-- Navigation Header -->
+  <header class="navbar">
+    <a href="#" class="brand" onclick="switchView('dashboard')">
+      <div class="brand-icon"><i class="bi bi-file-earmark-person-fill"></i></div>
+      <span>ATS Screening System</span>
+    </a>
+
+    <nav class="nav-links" id="navLinks" style="display: none;">
+      <button class="nav-item active" onclick="switchView('dashboard')"><i class="bi bi-grid-1x2-fill"></i> Dashboard</button>
+      <button class="nav-item" onclick="switchView('dashboard'); setTimeout(scrollToQuickActions, 120);"><i class="bi bi-lightning-charge-fill text-warning"></i> Quick Actions</button>
+      <button class="nav-item" onclick="switchView('jobs')"><i class="bi bi-briefcase-fill"></i> Jobs</button>
+      <button class="nav-item" onclick="switchView('upload')"><i class="bi bi-cloud-upload-fill"></i> Upload Resumes</button>
+      <button class="nav-item" onclick="switchView('candidates')"><i class="bi bi-people-fill"></i> Candidates</button>
+      <button class="nav-item" onclick="switchView('reports')"><i class="bi bi-graph-up-arrow"></i> Reports</button>
+    </nav>
+
+    <div class="user-profile" id="userProfileArea">
+      <!-- Dynamically filled by JS -->
+      <button class="btn btn-primary btn-sm" onclick="openAuthModal('login')"><i class="bi bi-box-arrow-in-right"></i> Sign In / Register</button>
+    </div>
+  </header>
+
+  <!-- Main View Container -->
+  <main class="main-container">
+
+    <!-- 0. PUBLIC WELCOME VIEW (Visible Before Authentication) -->
+    <section id="view-public" class="view-section active">
+      <div style="max-width: 880px; margin: 2rem auto; text-align: center;">
+        <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--primary-light); color: var(--primary); padding: 0.4rem 1rem; border-radius: 50px; font-weight: 700; font-size: 0.85rem; margin-bottom: 1.5rem; border: 1px solid rgba(245, 158, 11, 0.25);">
+          <i class="bi bi-shield-lock-fill"></i> Enterprise Recruiter Portal
+        </div>
+        <h1 style="font-size: 2.75rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 1.25rem; background: linear-gradient(135deg, #ffffff 40%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+          AI-Powered ATS Resume Screening & Candidate Ranking
+        </h1>
+        <p style="font-size: 1.1rem; color: var(--text-muted); max-width: 680px; margin: 0 auto 2.5rem; line-height: 1.6;">
+          Automate resume parsing, evaluate job skill matches with deep NLP, compute multidimensional ATS match scores, and streamline recruitment decisions.
+        </p>
+
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3.5rem;">
+          <button class="btn btn-primary" style="padding: 0.85rem 2rem; font-size: 1rem;" onclick="openAuthModal('login')">
+            <i class="bi bi-box-arrow-in-right"></i> Sign In to Portal
+          </button>
+          <button class="btn btn-secondary" style="padding: 0.85rem 2rem; font-size: 1rem;" onclick="openAuthModal('register')">
+            <i class="bi bi-person-plus-fill"></i> Register Recruiter Account
+          </button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; text-align: left;">
+          <div class="card" style="padding: 1.5rem;">
+            <div style="width: 44px; height: 44px; border-radius: 10px; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; margin-bottom: 1rem;">
+              <i class="bi bi-file-earmark-text-fill"></i>
+            </div>
+            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; color: #ffffff;">Deep Resume Parsing</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Extracts text, contact details, education, and career experience from PDF and DOCX documents automatically.</p>
+          </div>
+
+          <div class="card" style="padding: 1.5rem;">
+            <div style="width: 44px; height: 44px; border-radius: 10px; background: var(--secondary-light); color: var(--secondary); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; margin-bottom: 1rem;">
+              <i class="bi bi-cpu-fill"></i>
+            </div>
+            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; color: #ffffff;">Weighted ATS Scoring</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Multifactor algorithm weighting skills (40%), experience (25%), education (15%), and relevance keywords.</p>
+          </div>
+
+          <div class="card" style="padding: 1.5rem;">
+            <div style="width: 44px; height: 44px; border-radius: 10px; background: var(--success-light); color: var(--success); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; margin-bottom: 1rem;">
+              <i class="bi bi-trophy-fill"></i>
+            </div>
+            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; color: #ffffff;">Instant Candidate Rankings</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Automatic shortlist / maybe / reject classification with matched and missing skill breakdown.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. DASHBOARD VIEW (Protected) -->
+    <section id="view-dashboard" class="view-section">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Recruiter Dashboard</h1>
+          <p class="page-subtitle">Overview of current recruitment pipelines and automated ATS candidate screening.</p>
+        </div>
+
+        <div>
+          <button class="btn btn-primary" onclick="openJobModal()"><i class="bi bi-plus-lg"></i> Create New Job</button>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <!-- Stats Grid (All Clickable) -->
+      <div class="stats-grid">
+        <div class="stat-card" id="card-total-jobs" onclick="switchView('jobs')" title="Click to view all jobs">
+          <div class="stat-info">
+            <div class="stat-label">Total Jobs</div>
+            <div class="stat-value" id="stat-total-jobs">0</div>
+          </div>
+          <div class="stat-icon primary"><i class="bi bi-briefcase"></i></div>
+          <span class="card-click-hint">View Jobs <i class="bi bi-arrow-right"></i></span>
+        </div>
+
+        <div class="stat-card" id="card-total-resumes" onclick="switchView('upload')" title="Click to upload/manage resumes">
+          <div class="stat-info">
+            <div class="stat-label">Total Resumes</div>
+            <div class="stat-value" id="stat-total-resumes">0</div>
+          </div>
+          <div class="stat-icon info"><i class="bi bi-file-earmark-text"></i></div>
+          <span class="card-click-hint">Upload Resumes <i class="bi bi-arrow-right"></i></span>
+        </div>
+
+        <div class="stat-card" id="card-screened-candidates" onclick="switchView('candidates')" title="Click to view all candidate rankings">
+          <div class="stat-info">
+            <div class="stat-label">Screened Candidates</div>
+            <div class="stat-value" id="stat-screened-candidates">0</div>
+          </div>
+          <div class="stat-icon primary"><i class="bi bi-check2-square"></i></div>
+          <span class="card-click-hint">View Candidates <i class="bi bi-arrow-right"></i></span>
+        </div>
+
+        <div class="stat-card" id="card-shortlisted" onclick="navigateToCandidatesWithStatus('Shortlisted')" title="Click to filter shortlisted candidates">
+          <div class="stat-info">
+            <div class="stat-label">Shortlisted</div>
+            <div class="stat-value" id="stat-shortlisted">0</div>
+          </div>
+          <div class="stat-icon success"><i class="bi bi-star-fill"></i></div>
+          <span class="card-click-hint">Shortlisted <i class="bi bi-arrow-right"></i></span>
+        </div>
+
+        <div class="stat-card" id="card-rejected" onclick="navigateToCandidatesWithStatus('Rejected')" title="Click to filter rejected candidates">
+          <div class="stat-info">
+            <div class="stat-label">Rejected</div>
+            <div class="stat-value" id="stat-rejected">0</div>
+          </div>
+          <div class="stat-icon danger"><i class="bi bi-x-circle"></i></div>
+          <span class="card-click-hint">Rejected <i class="bi bi-arrow-right"></i></span>
+        </div>
+
+        <div class="stat-card" id="card-avg-score" onclick="switchView('reports')" title="Click to view screening & ATS analytics">
+          <div class="stat-info">
+            <div class="stat-label">Avg. ATS Score</div>
+            <div class="stat-value" id="stat-avg-score">0%</div>
+          </div>
+          <div class="stat-icon warning"><i class="bi bi-speedometer2"></i></div>
+          <span class="card-click-hint">View Reports <i class="bi bi-arrow-right"></i></span>
+        </div>
+      </div>
+
+      <!-- Quick Actions Section Container -->
+      <section class="quick-actions-section" id="quickActionsSection" aria-label="Quick Actions">
+        <div class="section-title-wrap" id="qaTitleWrap" style="cursor: pointer;" onclick="scrollToQuickActions()" title="Recruiter Quick Actions">
+          <h2 class="section-title"><i class="bi bi-lightning-charge-fill text-warning"></i> Quick Actions</h2>
+          <span class="section-subtitle">Shortcuts for recruiter pipelines & workflows</span>
+        </div>
+
+        <div class="quick-actions-grid" id="quickActionsGrid">
+          <!-- 1. Create Job -->
+          <div class="quick-action-card" id="qa-create-job" onclick="handleQuickAction('create-job')" role="button" tabindex="0" title="Create New Job (/jobs/create)">
+            <div class="qa-top">
+              <div class="qa-icon primary"><i class="bi bi-plus-lg"></i></div>
+              <span class="qa-badge">Post</span>
+            </div>
+            <div class="qa-content">
+              <h3 class="qa-title">Create Job</h3>
+              <p class="qa-desc">Define job role, requirements & skill criteria</p>
+            </div>
+            <div class="qa-footer">
+              <span class="qa-link">New Job <i class="bi bi-arrow-right"></i></span>
+            </div>
+          </div>
+
+          <!-- 2. Upload Resumes -->
+          <div class="quick-action-card" id="qa-upload-resumes" onclick="handleQuickAction('upload-resumes')" role="button" tabindex="0" title="Upload Resumes (/resumes/upload)">
+            <div class="qa-top">
+              <div class="qa-icon secondary"><i class="bi bi-cloud-arrow-up-fill"></i></div>
+              <span class="qa-badge">Upload</span>
+            </div>
+            <div class="qa-content">
+              <h3 class="qa-title">Upload Resumes</h3>
+              <p class="qa-desc">Batch upload PDF/DOCX for automated ATS screening</p>
+            </div>
+            <div class="qa-footer">
+              <span class="qa-link">Upload Files <i class="bi bi-arrow-right"></i></span>
+            </div>
+          </div>
+
+          <!-- 3. View Candidates -->
+          <div class="quick-action-card" id="qa-view-candidates" onclick="handleQuickAction('view-candidates')" role="button" tabindex="0" title="View Candidates (/candidates)">
+            <div class="qa-top">
+              <div class="qa-icon success"><i class="bi bi-people-fill"></i></div>
+              <span class="qa-badge">Leaderboard</span>
+            </div>
+            <div class="qa-content">
+              <h3 class="qa-title">View Candidates</h3>
+              <p class="qa-desc">Browse evaluated candidates & match ranking</p>
+            </div>
+            <div class="qa-footer">
+              <span class="qa-link">Candidates <i class="bi bi-arrow-right"></i></span>
+            </div>
+          </div>
+
+          <!-- 4. View Reports -->
+          <div class="quick-action-card" id="qa-view-reports" onclick="handleQuickAction('view-reports')" role="button" tabindex="0" title="View Reports (/reports)">
+            <div class="qa-top">
+              <div class="qa-icon warning"><i class="bi bi-graph-up-arrow"></i></div>
+              <span class="qa-badge">Metrics</span>
+            </div>
+            <div class="qa-content">
+              <h3 class="qa-title">View Reports</h3>
+              <p class="qa-desc">Inspect ATS score distribution & pipeline conversion</p>
+            </div>
+            <div class="qa-footer">
+              <span class="qa-link">View Analytics <i class="bi bi-arrow-right"></i></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Twin Panels: Recent Jobs & Recent Candidates -->
+      <div class="dashboard-panels-grid">
+        <!-- Panel 1: Recent Jobs -->
+        <div class="card" id="recentJobsPanel">
+          <div class="card-header" style="cursor: pointer;" onclick="switchView('jobs')" title="Click to view Jobs page">
+            <h2 class="card-title"><i class="bi bi-lightning-charge-fill text-warning"></i> Recent Jobs</h2>
+            <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); switchView('jobs')">View All Jobs <i class="bi bi-arrow-right"></i></button>
+          </div>
+          <div id="dashboard-jobs-container">
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Job Title</th>
+                    <th>Dept</th>
+                    <th>Resumes</th>
+                    <th>Shortlisted</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-jobs-tbody">
+                  <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Loading active jobs...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 2: Recent Candidates -->
+        <div class="card" id="recentCandidatesPanel">
+          <div class="card-header" style="cursor: pointer;" onclick="switchView('candidates')" title="Click to view Candidates page">
+            <h2 class="card-title"><i class="bi bi-person-badge-fill text-primary"></i> Recent Screened Candidates</h2>
+            <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); switchView('candidates')">View All Candidates <i class="bi bi-arrow-right"></i></button>
+          </div>
+          <div id="dashboard-candidates-container">
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Candidate</th>
+                    <th>Job Target</th>
+                    <th>ATS Score</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-candidates-tbody">
+                  <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Loading recent candidates...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. JOBS VIEW -->
+    <section id="view-jobs" class="view-section">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Job Management</h1>
+          <p class="page-subtitle">Create, update and screen candidates for open job positions.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openJobModal()"><i class="bi bi-plus-lg"></i> Create New Job</button>
+      </div>
+
+      <div class="jobs-grid" id="jobsGrid">
+        <!-- Dynamically rendered by JS -->
+      </div>
+    </section>
+
+    <!-- 3. RESUME UPLOAD & SCREENING VIEW -->
+    <section id="view-upload" class="view-section">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Upload Resumes & ATS Screening</h1>
+          <p class="page-subtitle">Select a target job and upload candidate resumes (PDF or DOCX) to screen automatically.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label">Select Target Job Position *</label>
+          <select class="form-select" id="uploadJobSelect" onchange="onUploadJobChange()">
+            <option value="">-- Choose Job --</option>
+          </select>
+        </div>
+
+        <div id="jobRequirementsPreview" style="display: none; margin-bottom: 1.5rem; background: var(--surface); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+
+          <div style="font-weight: 700; margin-bottom: 0.5rem;" id="previewJobTitle">Job Details</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);" id="previewJobSkills">Required Skills: N/A</div>
+        </div>
+
+        <div class="dropzone" id="resumeDropzone" onclick="document.getElementById('fileInput').click()">
+          <div class="dropzone-icon"><i class="bi bi-cloud-arrow-up-fill"></i></div>
+          <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem;">Drag and drop PDF or DOCX resumes here</h3>
+          <p style="color: var(--text-muted); font-size: 0.875rem;">or click to browse multiple files from your computer</p>
+          <input type="file" id="fileInput" multiple accept=".pdf,.docx,.doc" style="display: none;" onchange="handleFileSelect(event)">
+        </div>
+
+        <div id="selectedFilesContainer" style="margin-top: 1.25rem; display: none;">
+          <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.75rem;">Selected Files:</h4>
+          <div id="fileList" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem;"></div>
+          <button class="btn btn-primary w-100" id="btnStartScreening" onclick="uploadAndScreenResumes()"><i class="bi bi-lightning-auto"></i> Start ATS Screening</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. CANDIDATES RANKING & LEADERBOARD VIEW -->
+    <section id="view-candidates" class="view-section">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Candidate Rankings & Screening Results</h1>
+          <p class="page-subtitle">Ranked leaderboard of screened candidates evaluated against job requirements.</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+          <input type="text" class="form-input" id="candidateSearchInput" oninput="filterAndSortCandidateRankings()" placeholder="🔍 Search name, email, skills..." style="width: 200px; font-size: 0.85rem; padding: 0.4rem 0.75rem;">
+          <select class="form-select" id="rankingJobSelect" onchange="loadCandidateRankings()" style="width: auto;">
+            <option value="">-- Select Job --</option>
+          </select>
+          <select class="form-select" id="rankingStatusFilter" onchange="filterAndSortCandidateRankings()" style="width: auto;">
+            <option value="All">All Statuses</option>
+            <option value="Shortlisted">Shortlisted</option>
+            <option value="Maybe">Maybe</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+          <select class="form-select" id="candidateSortSelect" onchange="filterAndSortCandidateRankings()" style="width: auto;">
+            <option value="score_desc">Sort: Highest Score</option>
+            <option value="score_asc">Sort: Lowest Score</option>
+            <option value="exp_desc">Sort: Max Experience</option>
+            <option value="name_asc">Sort: Name (A-Z)</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="card">
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Candidate Name</th>
+                <th>Overall ATS Score</th>
+                <th>Skills (40%)</th>
+                <th>Experience (25%)</th>
+                <th>Education (15%)</th>
+                <th>Matched Skills</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="candidateRankingsTbody">
+              <tr><td colspan="9" style="text-align: center; color: var(--text-muted);">Select a job to view candidate rankings.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. REPORTS & ANALYTICS VIEW -->
+    <section id="view-reports" class="view-section">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Screening Analytics & Reports</h1>
+          <p class="page-subtitle">Deep metrics on ATS scoring, skill matching, and recruitment pipeline conversion.</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-outline" onclick="switchView('dashboard')"><i class="bi bi-grid-1x2-fill"></i> Dashboard</button>
+          <button class="btn btn-primary" onclick="switchView('upload')"><i class="bi bi-cloud-arrow-up-fill"></i> Upload Resumes</button>
+        </div>
+      </div>
+
+      <div id="reportsContentArea">
+        <!-- Rendered dynamically by JS (Analytics metrics or empty state) -->
+        <div class="empty-state">
+          <div class="empty-state-icon warning"><i class="bi bi-graph-up-arrow"></i></div>
+          <h3 class="empty-state-title">No analytics available yet</h3>
+          <p class="empty-state-desc">Create your first job posting and upload candidate resumes to generate ATS screening reports and pipeline metrics.</p>
+          <div style="display: flex; gap: 0.75rem; justify-content: center;">
+            <button class="btn btn-primary" onclick="openJobModal()"><i class="bi bi-plus-lg"></i> Create New Job</button>
+            <button class="btn btn-secondary" onclick="switchView('upload')"><i class="bi bi-cloud-upload"></i> Upload Resumes</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- CREATE / EDIT JOB MODAL -->
+  <div class="modal-overlay" id="jobModal">
+    <div class="modal-card" style="max-width: 720px;">
+      <div class="modal-header">
+        <h3 style="font-weight: 800;" id="jobModalTitle">Create New Job Posting</h3>
+        <button style="background: none; border: none; font-size: 1.5rem; cursor: pointer;" onclick="closeModal('jobModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="jobForm" onsubmit="handleJobSubmit(event)">
+          <input type="hidden" id="jobIdInput">
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Job Title *</label>
+              <input type="text" class="form-input" id="jobTitle" required placeholder="e.g. Senior Python Developer">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Department</label>
+              <input type="text" class="form-input" id="jobDepartment" placeholder="e.g. Engineering / Product">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Job Description *</label>
+            <textarea class="form-textarea" id="jobDescription" rows="3" required placeholder="Provide responsibilities, domain details, etc."></textarea>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Required Skills (Comma-separated) *</label>
+              <input type="text" class="form-input" id="jobReqSkills" required placeholder="Python, FastAPI, MySQL, Docker">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Preferred Skills (Comma-separated)</label>
+              <input type="text" class="form-input" id="jobPrefSkills" placeholder="AWS, Redis, PyTest">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Min Experience (Years)</label>
+              <input type="number" step="0.5" class="form-input" id="jobMinExp" value="2.0">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Max Experience (Years)</label>
+              <input type="number" step="0.5" class="form-input" id="jobMaxExp" value="6.0">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Education Requirement</label>
+              <select class="form-select" id="jobEducation">
+                <option value="Bachelor's Degree">Bachelor's Degree</option>
+                <option value="Master's Degree">Master's Degree</option>
+                <option value="Doctorate / Ph.D.">Doctorate / Ph.D.</option>
+                <option value="Associate Degree / Diploma">Associate Degree / Diploma</option>
+                <option value="High School Diploma">High School Diploma</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Location</label>
+              <input type="text" class="form-input" id="jobLocation" value="Remote / Hybrid">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100" style="margin-top: 0.75rem;">Save Job Posting</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-card" style="max-width: 420px;">
+      <div class="modal-header">
+        <h3 style="font-weight: 800;" id="authModalTitle">Recruiter Login</h3>
+        <button style="background: none; border: none; font-size: 1.5rem; cursor: pointer;" onclick="closeModal('authModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.25rem;">
+          <button class="nav-item active" id="tabLogin" onclick="toggleAuthTab('login')" style="flex: 1; text-align: center; justify-content: center;">Login</button>
+          <button class="nav-item" id="tabRegister" onclick="toggleAuthTab('register')" style="flex: 1; text-align: center; justify-content: center;">Register</button>
+        </div>
+
+        <form id="authForm" onsubmit="handleAuthSubmit(event)">
+          <div class="form-group" id="fullNameGroup" style="display: none;">
+            <label class="form-label">Full Name *</label>
+            <input type="text" class="form-input" id="authFullName" placeholder="Recruiter Name">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <input type="email" class="form-input" id="authEmail" required placeholder="recruiter@ats.com">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password *</label>
+            <input type="password" class="form-input" id="authPassword" required placeholder="••••••••">
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100" id="authSubmitBtn" style="margin-top: 0.5rem;">Sign In</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- CANDIDATE DETAIL MODAL -->
+  <div class="modal-overlay" id="candidateDetailModal">
+    <div class="modal-card" style="max-width: 750px;">
+      <div class="modal-header">
+        <h3 style="font-weight: 800;" id="candDetailName">Candidate Details</h3>
+        <button style="background: none; border: none; font-size: 1.5rem; cursor: pointer;" onclick="closeModal('candidateDetailModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="candDetailBody">
+        <!-- Dynamically rendered -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/static/js/app.js?v=7.0"></script>
+</body>
+</html>
